@@ -59,7 +59,7 @@ class MultiFileOperationActivity : AppCompatActivity() {
 
         filePickerResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                it.data?.data?.let {
+                it.data?.data?.let { uri ->
                     val filePath = MTUri.getPathFromProviderUri(uri)
                     if (filePath != null) {
                         fileList.add(filePath)
@@ -109,20 +109,22 @@ class MultiFileOperationActivity : AppCompatActivity() {
     private fun modifyMultiMediaFile() {
         if (fileList.isNotEmpty()) {
             if (fileList.size == 1) {
-                val file = MTFile(fileList[0])
-                file.initializeErrorCallBack(object : MTFileErrorResultCallBack {
-                    override fun onThrowingRecoverableSecurityException(intentSender: IntentSender) {
-                        val intentSenderRequest: IntentSenderRequest =
-                            IntentSenderRequest.Builder(intentSender).build()
-                        modifyPickerResult.launch(intentSenderRequest)
-                    }
+                if (uri != null) {
+                    val file = MTFile(fileList[0])
+                    file.initializeErrorCallBack(object : MTFileErrorResultCallBack {
+                        override fun onThrowingRecoverableSecurityException(intentSender: IntentSender) {
+                            val intentSenderRequest: IntentSenderRequest =
+                                IntentSenderRequest.Builder(intentSender).build()
+                            modifyPickerResult.launch(intentSenderRequest)
+                        }
 
-                    override fun onThrowingException(exception: Exception) {
-                        TODO("Not yet implemented")
-                    }
-                })
-                file.setSourceUri(uri)
-                file.updateFile()
+                        override fun onThrowingException(exception: Exception) {
+
+                        }
+                    })
+                    file.setSourceUri(uri)
+                    file.updateFile()
+                }
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 val file = MTMultiFile()
                 file.initializeErrorCallBack(object : MTFileErrorResultCallBack {
@@ -132,7 +134,7 @@ class MultiFileOperationActivity : AppCompatActivity() {
                     }
 
                     override fun onThrowingException(exception: Exception) {
-                        TODO("Not yet implemented")
+
                     }
                 })
                 file.modifyMultiMediaFile(fileList)
@@ -153,7 +155,7 @@ class MultiFileOperationActivity : AppCompatActivity() {
                     }
 
                     override fun onThrowingException(exception: Exception) {
-                        TODO("Not yet implemented")
+
                     }
                 })
                 file.deleteFile()
