@@ -1,3 +1,21 @@
+To get this library into your project
+
+Step 1. Add the JitPack repository to your build file
+
+Add it in your root build.gradle at the end of repositories:
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+Step 2. Add the dependency
+
+	dependencies {
+	        implementation 'com.github.gmg-avid:AndroidStorageTech:Tag'
+	}
+
 # AndroidStorageTech
 
 The Android Storage Library, this library handle the scope storage and basic storage method. 
