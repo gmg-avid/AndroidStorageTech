@@ -24,9 +24,6 @@ import com.gmg.avid.storage.tech.uri_logic.MTUri
 import java.lang.Exception
 import android.provider.MediaStore
 
-
-
-
 class FilePathActivity : AppCompatActivity() {
 
     private val activityBinding: ActivityFilePathBinding by lazy {

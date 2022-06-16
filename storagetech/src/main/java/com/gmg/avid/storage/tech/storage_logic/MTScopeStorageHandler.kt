@@ -320,10 +320,15 @@ object MTScopeStorageHandler {
     @Throws(Exception::class)
     fun Context.createFileByScope(filePath: String, inputStream: InputStream) : MTFileData? {
         val file = File(filePath)
+        var fileParentPath = file.parent
+        if (fileParentPath != null && fileParentPath.isNotEmpty() && fileParentPath.startsWith("/")) {
+            //Remove / in first field to avoid issue in the samsung device, m and a series we face this issues
+            fileParentPath = fileParentPath.replaceFirst("/", "");
+        }
         val collection = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         val fileContentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
-            put(MediaStore.MediaColumns.RELATIVE_PATH, file.parent)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, fileParentPath)
             put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
         val fileUri = contentResolver.insert(collection, fileContentValues)
@@ -351,11 +356,11 @@ object MTScopeStorageHandler {
     @Throws(Exception::class, SecurityException::class)
     fun Context.updateFileByScope(filePath: String, inputStream: InputStream): MTFileData? {
         val fileUri = getFileUriByScope(filePath)
+        var fileData : MTFileData? = null
         if (fileUri != null) {
-            updateUriByScope(fileUri, inputStream)
+            fileData = updateUriByScope(fileUri, inputStream)
         }
-        return null
-       // return getFileDetailsFromPath(filePath)
+        return fileData
     }
 
     /**

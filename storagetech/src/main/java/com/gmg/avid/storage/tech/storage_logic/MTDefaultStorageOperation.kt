@@ -63,8 +63,6 @@ object MTDefaultStorageOperation {
         val mimeType = uri?.let { getMimeTypeFromUri(it) }
         val isDurationRequired = isDurationRequired(mimeType)
         val duration = if (isDurationRequired) uri?.let { getDurationFromUri(it) } else null
-        val inputStream = uri?.let { contentResolver.openInputStream(it) }
-        val outputStream = uri?.let { contentResolver.openOutputStream(uri) }
         return MTFileData(filePath = filePath, relativePath = relativePath, displayName = displayName, mimeType = mimeType, duration = duration, size = length, uri = uri)
     }
 
